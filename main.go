@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"image/color"
 	"log"
 	"math"
@@ -92,7 +93,13 @@ func HSRCoefficient(x float64) float64 {
 }
 
 func main () {
-    file, err := os.Open("cities.csv")
+    filePath := flag.String("file", "cities.csv", "Path to the cities CSV file")
+    csvPath := flag.String("csv", "city_pairs.csv", "Path to the output CSV file")
+    kmlPath := flag.String("kml", "lines.kml", "Path to the output KML file")
+    minScore := flag.Float64("min", 100, "Minimum score for a city pair to be included")
+    flag.Parse()
+
+    file, err := os.Open(*filePath)
     if err != nil {
         log.Fatal(err)
     }
@@ -128,8 +135,7 @@ func main () {
             gravity := GravityModel(float64(city1.Population), float64(city2.Population), trainTime)
             score := gravity * HSRCoefficient(dist)
 
-            //println(city1.Area, city2.Area, dist, flightTime, drivingTime, gravity, score)
-            if score < 100 {
+            if score < *minScore {
                 continue
             }
 
@@ -165,7 +171,7 @@ func main () {
 		return cityPairs[i].Score > cityPairs[j].Score
 	})
 
-    file, err = os.Create("city_pairs.csv")
+    file, err = os.Create(*csvPath)
     if err != nil {
         log.Fatal(err)
     }
@@ -175,7 +181,7 @@ func main () {
         log.Fatal(err)
     }
     doc := kml.Document(placemarks...)
-    lineFile, err := os.Create("lines.kml")
+    lineFile, err := os.Create(*kmlPath)
 	if err != nil {
 		panic(err)
 	}
