@@ -4,6 +4,8 @@ A utility for calculating potential high speed rail demand and generating Google
 
 Based on [CityNerd's high speed rail methodology](https://www.youtube.com/watch?v=wE5G1kTndI4)
 
+![Example image](https://github.com/SuperManifolds/hsr_calculator/blob/main/example.png?raw=true)
+
 How to use:   
 ```go build```
 
